@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import os.path
 import base64
 import time
@@ -13,6 +15,36 @@ try:
     Log.Init()
 except:
     pass
+
+
+def to_unicode(msg):
+    """
+    입력되는 메시지를 python버전에 맞춰 unicode로 변환하는 작업을 진행
+    msg                         | python2         | python3
+    type('가')                  | str             | str
+    >>> '가'                    | '\xea\xb0\x80'  | '가'
+    type('가'.decode('utf-8'))  | unicoe          | -
+    >>> '가'                    | u'\uac00'       | -
+    '가'.encode('utf-8')        | -               | bytes
+    >>> '가'                    | -               | b'\xea\xb0\x80'
+
+    --> python2의 경우에는 bytes을 기본으로 사용
+    --> python3의 경우에는 unicode을 기본으로 사용
+    """
+
+    if sys.version_info.major == 2:
+        # version 2
+        if type(msg) == str:
+            # unicode로 변환하는 작업을 진행
+            return msg.decode('utf-8')
+        else:
+            return msg
+    else:
+        # version 3
+        if type(msg) == str:
+            return msg
+        elif type(msg) == bytes:
+            return msg.decode('utf-8')
 
 
 class Cursor(object):
@@ -183,6 +215,7 @@ class Cursor(object):
             debugStartTime = time.time()
 
         # sql = self.check_semi(sql)
+        sql = to_unicode(sql)
 
         sendMsg = "EXECUTE2 %s\r\n%s" % (len(sql.encode('utf-8')), sql)
         self.sock.SendMessage(sendMsg)

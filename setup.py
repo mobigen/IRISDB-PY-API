@@ -4,7 +4,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='M6',
-    version="1.0",
+    version="2.2.0",
     description="M6",
     long_description="""
         IRISDB-PY-API

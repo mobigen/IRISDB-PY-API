@@ -414,7 +414,7 @@ class Cursor(object):
             fileList.append(dat_file_path)
 
         for f in fileList :
-            fobj = open(f)
+            fobj = open(f, newline='')
             self._logger("[DEBUG] OpenFile (%s)" % f)
 
             while True :
